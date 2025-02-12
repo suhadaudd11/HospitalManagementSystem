@@ -1,22 +1,28 @@
-# Use the official .NET SDK image for building the app
+# Use the .NET SDK image for building the app
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
-WORKDIR /HospitalManagementSystem
+WORKDIR /app
 
-# Copy everything and restore dependencies
+# Copy the solution and project files
+COPY *.sln ./
+COPY HospitalManagementSystem/*.csproj ./HospitalManagementSystem/
+
+# Restore dependencies
+RUN dotnet restore ./HospitalManagementSystem/HospitalManagementSystem.csproj
+
+# Copy the rest of the project files
 COPY . ./
-RUN dotnet restore
 
-# Build and publish the app
-RUN dotnet publish -c Release -o /publish
+# Build and publish the application
+RUN dotnet publish ./HospitalManagementSystem/HospitalManagementSystem.csproj -c Release -o /publish
 
-# Use the official ASP.NET Core runtime image
+# Use the ASP.NET Core runtime image
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS runtime
-WORKDIR /HospitalManagementSystem
+WORKDIR /app
 
-# Copy the built app from the previous stage
+# Copy the built application
 COPY --from=build /publish .
 
-# Expose the necessary port
+# Expose port 5000
 EXPOSE 5000
 
 # Start the application
