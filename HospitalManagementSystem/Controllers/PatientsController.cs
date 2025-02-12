@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace HospitalManagementSystem.Controllers
 {
-    [Authorize(Roles = "Admin,Doctor,Staff")] // Only these roles can access this controller
+[Authorize(Roles = "Admin,Doctor,Staff")] // Only these roles can access this controller
     public class PatientsController : Controller
     {
         private readonly HospitalDbContext _context;

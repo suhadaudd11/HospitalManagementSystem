@@ -30,10 +30,11 @@
                         @if (User.Identity.IsAuthenticated)
                         {
                             <!-- Show FullName or Username -->
-                            <li><a>Welcome, @User.Identity.Name!</a></li>
+                            <li class="nav-item"><a class="nav-link text-dark">Welcome, @User.Identity.Name!</a></li>
+                            //<li class="nav-item"><a class="nav-link text-dark"> @User.Identity.Role!</a></li>
 
                             <!-- Logout Link -->
-                            <li>
+                        <li class="nav-item">
                                 <form asp-controller="Account" asp-action="Logout" method="post" class="d-inline">
                                     <button type="submit" class="btn btn-link text-decoration-none">Logout</button>
                                 </form>

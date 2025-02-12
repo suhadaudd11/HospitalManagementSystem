@@ -13,9 +13,24 @@
             <hr />
             <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
             <div class="form-floating mb-3">
+                <input asp-for="Input.FullName" class="form-control" autocomplete="full name" aria-required="true" placeholder="name in full" />
+                <label asp-for="Input.FullName">Full Name</label>
+                <span asp-validation-for="Input.FullName" class="text-danger"></span>
+            </div>
+            <div class="form-floating mb-3">
                 <input asp-for="Input.Email" class="form-control" autocomplete="username" aria-required="true" placeholder="name@example.com" />
                 <label asp-for="Input.Email">Email</label>
                 <span asp-validation-for="Input.Email" class="text-danger"></span>
+            </div>
+            <div class="form mb-3">
+                <label asp-for="Input.Role"></label>
+                <select asp-for="Input.Role" class="form-control">
+                    @foreach (var role in HospitalManagementSystem.Areas.Identity.Pages.Account.RegisterModel.InputModel.AllowedRoles)
+                    {
+                        <option value="@role">@role</option>
+                    }
+                </select>
+                <span asp-validation-for="Input.Role" class="text-danger"></span>
             </div>
             <div class="form-floating mb-3">
                 <input asp-for="Input.Password" class="form-control" autocomplete="new-password" aria-required="true" placeholder="password" />
@@ -30,7 +45,7 @@
             <button id="registerSubmit" type="submit" class="w-100 btn btn-lg btn-primary">Register</button>
         </form>
     </div>
-    <div class="col-md-6 col-md-offset-2">
+    @* <div class="col-md-6 col-md-offset-2"> *@
         <section>
             <h3>Use another service to register.</h3>
             <hr />
@@ -60,7 +75,6 @@
             }
         </section>
     </div>
-</div>
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />

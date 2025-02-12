@@ -3,6 +3,8 @@ using HospitalManagementSystem.Data;
 using HospitalManagementSystem.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI;
+using Microsoft.AspNetCore.Identity.UI.Services;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,6 +20,8 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options => options.S
     .AddEntityFrameworkStores<HospitalDbContext>()
     .AddDefaultTokenProviders();
 
+// Register EmailSender (Dummy implementation)
+builder.Services.AddSingleton<IEmailSender, EmailSender>();
 
 var app = builder.Build();
 
@@ -38,17 +42,34 @@ using (var scope = app.Services.CreateScope())
             await roleManager.CreateAsync(new IdentityRole(role));
         }
     }
-    // Seed an Admin User (Only in Dev)
+
     var adminUser = await userManager.FindByEmailAsync("admin@hospital.com");
     if (adminUser == null)
     {
-        adminUser = new ApplicationUser { UserName = "admin@hospital.com", Email = "admin@hospital.com" };
+        adminUser = new ApplicationUser
+        {
+            FullName = "Admin",
+            Email = "admin@hospital.com",
+            UserName = "admin@hospital.com", // Important: Identity requires UserName
+            EmailConfirmed = true, // Set EmailConfirmed to avoid verification issues
+            Role = "Admin"
+        };
+
         var result = await userManager.CreateAsync(adminUser, "Admin@123");
         if (result.Succeeded)
         {
             await userManager.AddToRoleAsync(adminUser, "Admin");
         }
+        else
+        {
+            Console.WriteLine("Error creating admin user:");
+            foreach (var error in result.Errors)
+            {
+                Console.WriteLine(error.Description);
+            }
+        }
     }
+
 }
 
 
